@@ -29,10 +29,21 @@ jobs:
       run: echo "DOCKER_BUILDKIT=0" >> $GITHUB_ENV
 
       
-    - name: SonarQube Scan
-      uses: kitabisa/sonarqube-action@v1.2.0
-      with:
-        host: ${{ secrets.SONARQUBE_HOST }}
-        login: ${{ secrets.SONARQUBE_TOKEN }}
+    - name: Install SonarScanner
+      run: |
+        wget -O sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+        unzip sonar-scanner.zip
+        sudo mv sonar-scanner-5.0.1.3006-linux /opt/sonar-scanner
+        echo "export PATH=$PATH:/opt/sonar-scanner/bin" >> ~/.bashrc
+        source ~/.bashrc
+
+    - name: SonarQube Scan (Without Docker)
+      run: |
+        sonar-scanner \
+          -Dsonar.projectKey=your_project_key \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=${{ secrets.SONARQUBE_HOST }} \
+          -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
+
 
    
