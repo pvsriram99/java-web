@@ -25,23 +25,7 @@ jobs:
     - name: Trivy scan 
       run: trivy fs --format table -o fs.html .
       
-    - name: Install SonarScanner
-      run: |
-        wget -O sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-        unzip sonar-scanner.zip
-        sudo mv sonar-scanner-5.0.1.3006-linux /opt/sonar-scanner
-        echo "export PATH=$PATH:/opt/sonar-scanner/bin" >> ~/.bashrc
-        echo "export PATH=$PATH:/opt/sonar-scanner/bin" >> $GITHUB_ENV  # Ensure it's available in subsequent steps
-        source ~/.bashrc
-        /opt/sonar-scanner/bin/sonar-scanner --version  # Check if SonarScanner is installed
-
-    - name: SonarQube Scan (Without Docker)
-      run: |
-        sonar-scanner \
-          -Dsonar.projectKey=your_project_key \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=${{ secrets.SONARQUBE_HOST }} \
-          -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
+    
 
 
 
